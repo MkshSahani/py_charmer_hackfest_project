@@ -1,6 +1,8 @@
 from tkinter import * 
 import customtkinter 
 from config.constants import STUDENT_LOGIN_TITLE
+from .alert_comp import alert
+from .student_reg_comp import StudentRegistrationComponent
 
 class StudentLoginComponent: 
     
@@ -20,18 +22,30 @@ class StudentLoginComponent:
         self.studentPassword = customtkinter.CTkEntry(master=self.studentLoginWindow, height=40, width=300, font = customtkinter.CTkFont(size = 12))
         self.studentPassword.configure(show = "*")
         self.studentPassword.place(relx = 0.3, rely = 0.52)
-        self.logiBtn = customtkinter.CTkButton(master = self.studentLoginWindow, text = "Login")
+        self.logiBtn = customtkinter.CTkButton(master = self.studentLoginWindow, text = "Login", command=self.loginBtnCommand)
         self.logiBtn.place(relx = 0.4, rely = 0.6)
         self.studentSignupLabel = customtkinter.CTkLabel(master=self.studentLoginWindow, text = "create a new account.", font = customtkinter.CTkFont(size = 14))
         self.studentSignupLabel.place(relx = 0.38, rely = 0.65)
         self.signupLabel = customtkinter.CTkLabel(master = self.studentLoginWindow, text = "sign up", text_color='blue', font = customtkinter.CTkFont(size = 14))
         self.signupLabel.place(relx = 0.56, rely = 0.65)
-        self.signupLabel.bind("<Button-1>", lambda e: self.signUpBtnCommand())
+        self.signupLabel.bind("<Button-1>", lambda e : self.signUpBtnCommand())
     def render(self):
         self.studentLoginWindow.mainloop()
 
     def loginBtnCommand(self): 
-        pass 
+        email = self.studentEmailAddress.get()
+        password = self.studentPassword.get()
+        if len(email) == 0 or len(password) == 0:
+            error_msg = ""
+            if len(email) == 0:
+                error_msg = "Please Enter the Email"
+            elif len(password) == 0:
+                error_msg = "Please Enter the Password"
+            alert(error_msg=error_msg)
+        else: 
+            pass
 
     def signUpBtnCommand(self): 
-        print("====== signup btn command =======")
+        self.studentLoginWindow.destroy()
+        studentRegComponent = StudentRegistrationComponent()
+        studentRegComponent.render()

@@ -2,6 +2,7 @@ from tkinter import *
 import customtkinter 
 from config.constants import TOPBAR_TITLE
 from gui_components.registration_component.student_login_comp import StudentLoginComponent
+from gui_components.registration_component.employee_login_comp import EmployeeLoginComponent
 
 class FirstPage: 
 
@@ -27,5 +28,6 @@ class FirstPage:
         studentLoginComponent.render()
 
     def employeeBtnCommandAction(self): 
-        print("Employee Btn Command")
-    
+        self.root.destroy()
+        employeeLoginComponent = EmployeeLoginComponent()
+        employeeLoginComponent.render()
