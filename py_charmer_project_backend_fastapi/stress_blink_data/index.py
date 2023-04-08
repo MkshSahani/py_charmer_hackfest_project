@@ -23,12 +23,19 @@ async def get_stress_blink_data(getStressBlinkValues : GetStressBlinkData):
     get_stress_blink_data = getStressBlinkValues.dict() 
     data = pycharmer_mongo_db.stress_blink_data.find({"access_token": get_stress_blink_data['access_token']}) 
     time_stamp_lst = []
-    
+    blink_count = []
+    stress_level = []
     for i in data:
-        print(i)
+        time_stamp_lst.append(i['timestamp'])
+        blink_count.append(i['blink_count'])
+        stress_level.append(max(i['stress_list_lst']))
     return {
         "status_code" : 200,
         "message": "Success",
-        "data": {}
+        "data": {
+            'time_stamp_lst' : time_stamp_lst,
+            'blink_count_lst' : blink_count,
+            'stress_level_lst' : stress_level
+        }
     }
     

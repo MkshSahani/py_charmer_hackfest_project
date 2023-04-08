@@ -57,9 +57,10 @@ class DashBoardComponent:
         fig = Figure(figsize=(5, 4), dpi=100)
         ax = fig.add_subplot()
         # line, = ax.hist()
-        data = requests.post(BACKEND_BASE_URL + SRESS_BLINK_DATA_GET, json = {
+        res = requests.post(BACKEND_BASE_URL + SRESS_BLINK_DATA_GET, json = {
             "access_token": self.access_token
         })
+        data = res.json()
         print(data)
         ax.set_xlabel("timestamp")
         ax.set_ylabel("stress level")

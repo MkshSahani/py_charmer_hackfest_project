@@ -75,6 +75,7 @@ predictor = dlib.shape_predictor("/home/mukesh/hackfest/py_charmer_hackfest_proj
 emotion_classifier = load_model("/home/mukesh/hackfest/py_charmer_hackfest_project/pycharmer_project_desktop_app/stress_detection_module/_mini_XCEPTION.102-0.66.hdf5", compile=False)
 cap = cv2.VideoCapture(0)
 points = []
+stress_lst = []
 t1 = time.time()
 t2 = time.time()
 runner_index = 0 
@@ -140,11 +141,12 @@ while(True):
         cv2.imshow("Blink count", clahe_image)
         cv2.imshow("Frame", frame)
         key = cv2.waitKey(1) & 0xFF
+        stress_lst.append(int(stress_value * 100))
         t2 = time.time()
         if t2 - t1 >= 10:
             t1 = t2 
-            stress_values = points[runner_index:]
-            runner_index = len(points) - 1 
+            stress_values = stress_lst[runner_index:]
+            runner_index = len(stress_lst) - 1 
             blink_count = total - last_total_blink_count
             last_total_blink_count = total
             req_body = {
