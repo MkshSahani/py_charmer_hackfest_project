@@ -2,25 +2,24 @@
 
 from fastapi import FastAPI
 import uvicorn
-from validator import StressDataModel, TypingDataModel, ScreenTimeDataModel
-from database import DataStoring
+from validator import *
+from db.database import *
+from user_registration.index import student_registration_router, employee_registration_router
+from login.index import user_router
+from url_handling.index import new_extension_router, delete_extension_router
 
 app = FastAPI()
+app.include_router(student_registration_router)
+app.include_router(employee_registration_router)
+app.include_router(user_router)
+app.include_router(new_extension_router)
+app.include_router(delete_extension_router)
 
-
-@app.post("/register_student")
-async def registerStudent(student_data: StudentModel):
-    student_data = student_data.dict()
-    print(student_data)
-    if(DataStoring(student_data)):
-        return {
-            "result": student_data,
-        }
-    else:
-        return {
-            "result": "Not saved"
-        }
-
+'''
+/stress_data_url
+/screen_time_data_url
+/typing_data_url
+'''
 
 @app.post("/stress_data_url")
 async def stress(stress_data: StressDataModel):
@@ -37,7 +36,7 @@ async def stress(stress_data: StressDataModel):
 
 
 @app.post("/screen_time_data_url")
-async def stress(screen_time_data: ScreenTimeDataModel):
+async def screenTime(screen_time_data: ScreenTimeDataModel):
     screen_time_data = screen_time_data.dict()
     print(screen_time_data)
     if(DataStoring(screen_time_data)):

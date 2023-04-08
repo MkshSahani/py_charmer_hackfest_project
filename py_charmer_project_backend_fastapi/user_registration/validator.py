@@ -9,7 +9,7 @@ class StudentModel(BaseModel):
     email: str
     pass_word: str
     contact: str
-    acc_token: str
+    reportingTime: str
 
 
 class EmployeeModel(BaseModel):
@@ -19,19 +19,4 @@ class EmployeeModel(BaseModel):
     email: str
     pass_word: str
     contact: str
-    acc_token: str
-
-
-class StressDataModel(BaseModel):
-    time: str
-    stressLevel: float
-
-
-class ScreenTimeDataModel(BaseModel):
-    time: str
-    screenTimeSpeed: int
-
-
-class TypingDataModel(BaseModel):
-    time: str
-    typingSpeed: int
+    reportingTime: str
