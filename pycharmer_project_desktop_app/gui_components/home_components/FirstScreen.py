@@ -15,9 +15,7 @@ class FirstPage:
                             font = customtkinter.CTkFont(size = 40, weight="bold"))
         self.textLabel.place(relx = 0.35, rely = 0.3)
         self.studentBtn = customtkinter.CTkButton(master = self.root, text = "login", height=40, width = 150, command=self.studentBtnCommandAction)
-        # self.employeeBtn = customtkinter.CTkButton(master = self.root, text = "Employee", height=40, width = 150, command=self.employeeBtnCommandAction) 
         self.studentBtn.place(relx = 0.45, rely = 0.5)
-        # self.employeeBtn.place(relx  = 0.5, rely = 0.5)
     
     def render(self): 
         self.root.mainloop()

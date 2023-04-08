@@ -7,25 +7,19 @@ import time
 import dlib
 import cv2
 import datetime
-
-# from keras.preprocessing.image import img_to_array
 from keras_preprocessing.image import img_to_array
 from keras.models import load_model
 import requests
-import argparse 
-# from config.url_resources import STRESS_BLINK_ENDPOINT, BACKEND_BASE_URL
-
+import argparse
 ap = argparse.ArgumentParser()
 ap.add_argument("-at", "--access-token")
 args = vars(ap.parse_args())
-
 
 def eye_brow_distance(leye,reye):
     global points
     distq = dist.euclidean(leye,reye)
     points.append(int(distq))
     return distq
-
 
 def emotion_finder(faces,frame):
     global emotion_classifier
@@ -109,10 +103,10 @@ while(True):
             cv2.drawContours(frame, [leyebrowhull], -1, (0, 255, 0), 1)
             distq = eye_brow_distance(leyebrow[-1],reyebrow[0])
             stress_value,stress_label = normalize_values(points,distq)
-            cv2.putText(frame, "Stressed " if int(stress_value * 100) >= 60 else "Not Stressed", (10,10),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0) if int(stress_value * 100) <= 60 else (0, 0, 255), 2)
-            cv2.putText(frame,"stress level:{}".format(str(int(stress_value*100))),(20,40),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0) if int(stress_value * 100) <= 60 else (0, 0, 255), 2)
+            cv2.putText(frame, "Stressed " if int(stress_value * 100) >= 70 else "Not Stressed", (10,10),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0) if int(stress_value * 100) <= 70  else (0, 0, 255), 2)
+            cv2.putText(frame,"stress level:{}".format(str(int(stress_value*100))),(20,40),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0) if int(stress_value * 100) <= 70 else (0, 0, 255), 2)
 
-        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8)   )
+        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
         clahe_image = clahe.apply(gray)
         detections = detector(clahe_image,0)
         for detection in detections:
@@ -143,7 +137,7 @@ while(True):
         key = cv2.waitKey(1) & 0xFF
         stress_lst.append(int(stress_value * 100))
         t2 = time.time()
-        if t2 - t1 >= 10:
+        if t2 - t1 >= 40:
             t1 = t2
             stress_values = stress_lst[runner_index:]
             runner_index = len(stress_lst) - 1

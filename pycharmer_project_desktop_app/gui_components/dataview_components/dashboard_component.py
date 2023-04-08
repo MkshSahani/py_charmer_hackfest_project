@@ -1,7 +1,7 @@
 from tkinter import * 
 import customtkinter 
 from config.constants import DASHBOARD_TITLE
-from config.url_resources import BACKEND_BASE_URL, STRESS_BLINK_DETECTOR, SRESS_BLINK_DATA_GET, GET_STEP_COUNT_END_POINT
+from config.url_resources import BACKEND_BASE_URL, STRESS_BLINK_DETECTOR, SRESS_BLINK_DATA_GET, GET_STEP_COUNT_END_POINT, GET_BOWSING_DETAILS
 import os
 import threading
 import numpy as np
@@ -41,7 +41,7 @@ class DashBoardComponent:
         self.step_count = customtkinter.CTkButton(self.navigationFrame, text = "Step Count", fg_color='transparent', font = customtkinter.CTkFont(size = 15),
                     text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), height=40, border_spacing=10,width=200,  corner_radius=0, command=self.select_step_count_tile)
         self.step_count.grid(row = 3, column = 0, sticky = 'ew', pady = 10)
-        self.browsing_classification = customtkinter.CTkButton(self.navigationFrame, text = "Browing Pattern", fg_color='transparent', font = customtkinter.CTkFont(size = 15),
+        self.browsing_classification = customtkinter.CTkButton(self.navigationFrame, text = "Browsing Pattern", fg_color='transparent', font = customtkinter.CTkFont(size = 15),
                     text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), height=40, border_spacing=10,width=200,  corner_radius=0, command=self.select_browsing_title)
         self.browsing_classification.grid(row = 4, column = 0, sticky = 'ew', pady = 10)
 
@@ -50,13 +50,15 @@ class DashBoardComponent:
         self.alert_label = customtkinter.CTkLabel(master = self.alert_frame, text = 'Alert Tab', font = customtkinter.CTkFont(size = 30))
         self.alert_label.place(relx = 0.05, rely = 0.1)
         self.stress_frame = customtkinter.CTkFrame(master = self.dashboardWindow)
-        self.stress_frame_label = customtkinter.CTkLabel(master = self.stress_frame, text = 'Blink and Stress Level Tab', font = customtkinter.CTkFont(size = 30))
-        self.stress_frame_label.place(relx = 0.05, rely = 0.1)
+        self.stress_frame_label = customtkinter.CTkLabel(master = self.stress_frame, text = 'Stress Level', font = customtkinter.CTkFont(size = 30))
+        self.stress_frame_label.place(relx = 0.05, rely = 0.05)
+        self.blink_frame_label = customtkinter.CTkLabel(master = self.stress_frame, text = "Blink Rate", font = customtkinter.CTkFont(size =30))
+        self.blink_frame_label.place(relx = 0.05, rely = 0.54)
         self.step_count_frame = customtkinter.CTkFrame(master = self.dashboardWindow)
         self.step_count_frame_label = customtkinter.CTkLabel(master = self.step_count_frame, text = "Step Count Tab", font = customtkinter.CTkFont(size = 30))
         self.step_count_frame_label.place(relx = 0.05, rely = 0.1)
         self.browsing_frame = customtkinter.CTkFrame(master = self.dashboardWindow)
-        self.browsing_frame_label = customtkinter.CTkLabel(master = self.browsing_frame, text = "Browing Pattern Tab", font = customtkinter.CTkFont(size = 30))
+        self.browsing_frame_label = customtkinter.CTkLabel(master = self.browsing_frame, text = "Browsing Pattern Tab", font = customtkinter.CTkFont(size = 30))
         self.browsing_frame_label.place(relx = 0.05, rely = 0.1)
         self.select_by_name("alert")
 
@@ -115,8 +117,14 @@ class DashBoardComponent:
             ax.set_ylabel("stress level")
             ax.set_title("Time vs Stress Level")
             canvas = FigureCanvasTkAgg(fig, master=self.stress_frame)
-            canvas.draw()
-            canvas.get_tk_widget().place(x = 60, y = 110, width=800, height=300)
+
+            fig1 = Figure(figsize=(5, 4), dpi = 100)
+            ax1 = fig1.add_subplot()
+            ax1.plot([datetime.datetime.strptime(fl, "%m/%d/%Y, %H:%M:%S") for fl in time_stamp_lst], blink_count_lst, marker = 'o',  markerfacecolor = 'red')
+            canvas1 = FigureCanvasTkAgg(fig1, master = self.stress_frame)
+            canvas1.draw()
+            canvas.get_tk_widget().place(x = 60, y = 90, width=800, height=250)
+            canvas1.get_tk_widget().place(x = 60, y = 420, width=800, height=250)
             self.stress_frame.grid(row = 0, column = 1, sticky = 'nsew')
         else:
             self.stress_frame.grid_forget()
@@ -124,12 +132,18 @@ class DashBoardComponent:
             res = requests.post(GET_STEP_COUNT_END_POINT, json = {
                 'accessToken': self.access_token
             })
-            data = res.json() 
+            data = res.json()
             print(data)
             self.step_count_frame.grid(row = 0, column = 1, sticky = 'nsew')
         else:
             self.step_count_frame.grid_forget()
         if name == "browsing":
+            res = requests.post(BACKEND_BASE_URL + GET_BOWSING_DETAILS, json = {
+                'access_token' : self.access_token
+            })
+            data = res.json()
+            print(data)
+
             self.browsing_frame.grid(row = 0, column = 1, sticky = 'nsew')
         else:
             self.browsing_frame.grid_forget()
@@ -143,5 +157,5 @@ class DashBoardComponent:
     def select_step_count_tile(self):
         self.select_by_name("step_count")
 
-    def select_browsing_title(self): 
+    def select_browsing_title(self):
         self.select_by_name("browsing")
