@@ -4,7 +4,8 @@ from config.constants import DASHBOARD_TITLE
 
 class DashBoardComponent: 
 
-    def __init__(self): 
+    def __init__(self, access_token : str = ""):
+        self.access_token = access_token 
         self.activateFlag = False 
         self.dashboardWindow = customtkinter.CTk()
         self.dashboardWindow.geometry("1200x700")

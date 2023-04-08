@@ -15,7 +15,7 @@ To detect the stress level of users, if stress levels go beyond our set threshol
 A thread will always keep a track of screen time of users and how much time users spend on time, using the the screen time and typing time of users we can check
 How much of the day he spends on the system. 
 
-### Browsing Pattern *optional(based on user preference):
+### Browsing Pattern:
 We will keep track of browsing pattern of users, here we will not store the ip address of website user visits instead we will store the kind of website user visits like (social media, e-commerce, streaming platforms, information websites, etc), we would have already made clusters for kind of websites, and using this data we will generate the required report.
 
 
