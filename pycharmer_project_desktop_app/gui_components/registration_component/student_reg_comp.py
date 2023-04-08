@@ -2,7 +2,10 @@ from tkinter import *
 import customtkinter 
 from config.constants import STUDENT_REG_TITLE
 from .alert_comp import alert
-
+import requests
+from config.url_resources import BACKEND_BASE_URL, STUDENT_REGISTRTION_ENDPOINT
+from gui_components.dataview_components.dashboard_component import DashBoardComponent
+from gui_components.registration_component.alert_comp import alert
 class StudentRegistrationComponent: 
 
     def __init__(self): 
@@ -40,12 +43,14 @@ class StudentRegistrationComponent:
         ### password and confirm password. 
         self.userPasswordLabel = customtkinter.CTkLabel(master = self.registerStudentWindow, text = "Password", font = customtkinter.CTkFont(size = 17))
         self.userPasswordEntry = customtkinter.CTkEntry(master = self.registerStudentWindow, font = customtkinter.CTkFont(size = 17), width = 200)
+        self.userPasswordEntry.configure(show = '*')
         self.userPasswordLabel.place(relx = 0.2, rely = 0.4)
         self.userPasswordEntry.place(relx = 0.2, rely = 0.45)
 
         ### confirm password 
         self.userConfirmPasswordLabel = customtkinter.CTkLabel(master = self.registerStudentWindow, text = "Confirm Password", font = customtkinter.CTkFont(size = 17))
         self.userConfirmPasswordEntry = customtkinter.CTkEntry(master = self.registerStudentWindow, font = customtkinter.CTkFont(size = 17), width = 200)
+        self.userConfirmPasswordEntry.configure(show = '*')
         self.userConfirmPasswordLabel.place(relx = 0.6, rely = 0.4)
         self.userConfirmPasswordEntry.place(relx = 0.6, rely = 0.45)
 
@@ -64,13 +69,13 @@ class StudentRegistrationComponent:
         self.timeLabel.place(relx = 0.79, rely = 0.55)
         self.userRegistrationBtn = customtkinter.CTkButton(master = self.registerStudentWindow, text = "Register Student", command = self.registerStudent, width=200) 
         self.userRegistrationBtn.place(relx = 0.35, rely = 0.64)
-
     
 
     def render(self): 
         self.registerStudentWindow.mainloop()
 
     def registerStudent(self):
+
 
         error_msg = ""
         student_details = {}
@@ -79,16 +84,38 @@ class StudentRegistrationComponent:
         student_details['email'] = self.userEmailEntry.get()
         student_details['password'] = self.userPasswordEntry.get()
         student_details['phone'] = self.userPhoneNumberEntry.get()
-        student_details['interval'] = self.userConfirmPasswordEntry.get()
+        student_details['interval'] = self.intervalTimeSetEntry.get()
+        student_details['user_name'] = self.usernameEntry.get()
         print(student_details)
         for i, j in student_details.items(): 
             if len(j) == 0:
                 error_msg = " ".join(i.split("_"))  + " Can\'t be Empty !!!"
                 break
+            try: 
+                interval = int(student_details['interval'])
+            except Exception as e:
+                error_msg = "Please Enter Number in Interval"
         if error_msg != "":
             alert(error_msg=error_msg)
+        if student_details['password'] != self.userConfirmPasswordEntry.get(): 
+            alert("Passwords Doesnot Match") 
         else: 
-            pass 
+
+            student_details['reportingTime'] = student_details['interval']
+            del student_details['interval']
+            student_details['contact'] = student_details['phone']
+            del student_details['phone']
+            student_details['pass_word'] = student_details['password']
+            del student_details['password']
+            res = requests.post(BACKEND_BASE_URL + STUDENT_REGISTRTION_ENDPOINT, json=student_details)
+            res = res.json()
+            if res['status_code'] == 200:
+                studentDashBoard = DashBoardComponent()
+                self.registerStudentWindow.destroy()
+                DashBoardComponent.render()
+            else:
+                alert("Some Error Occured")
+            
 
 
         

@@ -1,5 +1,7 @@
 CREATE DATABASE IF NOT EXISTS py_charmer_hackfest;
 
+USE py_charmer_hackfest;
+
 CREATE TABLE IF NOT EXISTS employee (  
 	ID int AUTO_INCREMENT NOT NULL, 
 	user_name varchar(255) UNIQUE,
@@ -12,6 +14,7 @@ CREATE TABLE IF NOT EXISTS employee (
     reportingTime int NOT NULL,
 	PRIMARY KEY(ID) 
 );
+
 
 CREATE TABLE IF NOT EXISTS student (  
 	ID int AUTO_INCREMENT NOT NULL, 
@@ -26,4 +29,4 @@ CREATE TABLE IF NOT EXISTS student (
 	PRIMARY KEY(ID) 
 );
 
-Select * From py_charmer_hackfest.student
+-- Select * From py_charmer_hackfest.student

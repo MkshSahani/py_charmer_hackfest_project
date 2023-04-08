@@ -58,17 +58,10 @@ def UserLogin(email: str, pwd: str, placeholder : str):
     otherwise it will return False
     '''
     #checking the email and pwd is present in the database or not
-    query = "SELECT * FROM " + placeholder + " where email= '" + email + "' AND pass_word ='" + pwd + "'"
+    query = "SELECT acc_token FROM " + placeholder + " where email= '" + email + "' AND pass_word ='" + pwd + "'"
     cursor.execute(query)
     records=cursor.fetchall()
-    print(records)
-    query = "SELECT * FROM " + placeholder
-    cursor.execute(query)
-    records=cursor.fetchall()
-    for entry in records:
-        if entry[3]==email and entry[4]==pwd:
-            return True
-    return False
+    return records
 
 def CreateUrl(username: str, url: str):
     '''

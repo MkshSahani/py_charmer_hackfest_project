@@ -27,11 +27,17 @@ async def registerStudent(student_data: StudentModel):
         placeholder='student'
     )):
         return {
-            "result": student_data,
+            # "result": student_data,
+            'status_code': 200,
+            'message': 'success',
+            'data': []
         }
     else:
         return {
-            "result": "Not saved"
+            # "result": "Not saved"
+            'status_code': 400,
+            'message': "User Not Created",
+            'data': []
         }
 
 employee_registration_router = APIRouter(
@@ -54,9 +60,14 @@ async def register_employee(employee_data: EmployeeModel):
         placeholder='employee'
     )):
         return {
-            "result": employee_data,
+            # "result": employee_data,
+            "status_code": 200,
+            "message": "Success",
+            "data": {}
         }
     else:
         return {
-            "result": "Not saved"
+            "status_code": 200,
+            "message": "Success",
+            "data": {}
         }

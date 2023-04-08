@@ -1,8 +1,14 @@
 from tkinter import * 
 import customtkinter 
-from config.constants import EMPLOYEE_LOGIN_TITLE
-from .employee_reg_comp import EmployeeRegComponent
+from config.constants import STUDENT_LOGIN_TITLE, EMPLOYEE_LOGIN_TITLE
 from .alert_comp import alert
+from .student_reg_comp import StudentRegistrationComponent
+from config.url_resources import BACKEND_BASE_URL, USER_LOGIN_ENDPOINT
+import requests
+from gui_components.dataview_components.dashboard_component import DashBoardComponent 
+from config.url_resources import FILE_PATH
+import json
+from gui_components.registration_component.employee_reg_comp import EmployeeRegComponent
 
 class EmployeeLoginComponent: 
     
@@ -28,7 +34,7 @@ class EmployeeLoginComponent:
         self.studentSignupLabel.place(relx = 0.38, rely = 0.65)
         self.signupLabel = customtkinter.CTkLabel(master = self.studentLoginWindow, text = "sign up", text_color='blue', font = customtkinter.CTkFont(size = 14))
         self.signupLabel.place(relx = 0.56, rely = 0.65)
-        self.signupLabel.bind("<Button-1>", lambda e: self.signUpBtnCommand())
+        self.signupLabel.bind("<Button-1>", lambda e : self.signUpBtnCommand())
     def render(self):
         self.studentLoginWindow.mainloop()
 
@@ -43,9 +49,29 @@ class EmployeeLoginComponent:
                 error_msg = "Please Enter the Password"
             alert(error_msg=error_msg)
         else: 
-            pass 
+            req_body = {
+                'email': email,
+                'pass_word': password
+            }
+            res = requests.post(BACKEND_BASE_URL + USER_LOGIN_ENDPOINT, json = req_body)
+            print(res.text)
+            res = res.json()
+            print(res)
+            if res['status_code'] != 200:
+                alert(res['message']) 
+            else: 
+                studetnDasthBoard = DashBoardComponent()
+                access_token_details = {
+                    'access_token': res['data']['access_token']
+                }
+                json_obj = json.dumps(access_token_details)
+                with open(FILE_PATH + "accesstoken.json", 'w') as f:
+                    f.write(json_obj)
+                self.studentLoginWindow.destroy()
+                studetnDasthBoard.render()
+
 
     def signUpBtnCommand(self): 
         self.studentLoginWindow.destroy()
-        emploeeRegCompoent = EmployeeRegComponent()
-        emploeeRegCompoent.render()
+        studentRegComponent = EmployeeRegComponent()
+        studentRegComponent.render()
