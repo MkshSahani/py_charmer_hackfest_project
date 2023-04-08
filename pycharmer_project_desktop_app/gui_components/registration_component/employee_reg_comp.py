@@ -1,6 +1,6 @@
 from tkinter import * 
 import customtkinter 
-from config.constants import STUDENT_REG_TITLE
+from config.constants import EMPLOYEE_REGISTER_TITLE
 
 class EmployeeRegComponent: 
 
@@ -8,7 +8,7 @@ class EmployeeRegComponent:
         self.registerStudentWindow = customtkinter.CTk()
         self.registerStudentWindow.geometry("800x700")
         self.registerStudentWindow.resizable(False, False)
-        self.registerStudentWindow.title(STUDENT_REG_TITLE)
+        self.registerStudentWindow.title(EMPLOYEE_REGISTER_TITLE)
         self.registerStudentLabel = customtkinter.CTkLabel(master = self.registerStudentWindow, text = "Employee Registration", font = customtkinter.CTkFont(size = 30))
         self.registerStudentLabel.place(relx = 0.32, rely = 0.1)
 
@@ -68,7 +68,6 @@ class EmployeeRegComponent:
         self.registerStudentWindow.mainloop()
 
     def registerStudent(self):
-
         error_msg = ""
         student_details = {}
         student_details['first_name'] = self.firstnameEntry.get()
@@ -77,6 +76,7 @@ class EmployeeRegComponent:
         student_details['password'] = self.userPasswordEntry.get()
         student_details['phone'] = self.userPhoneNumberEntry.get()
         student_details['interval'] = self.userConfirmPasswordEntry.get()
+        student_details['user_name'] = self.usernameEntry.get()
         print(student_details)
         for i, j in student_details.items(): 
             if len(j) == 0:

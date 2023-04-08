@@ -1,5 +1,5 @@
-from gui_components.registration_component.student_reg_comp import StudentRegistrationComponent
 import customtkinter
 customtkinter.set_appearance_mode("dark")
-g = StudentRegistrationComponent()
-g.render()
+from gui_components.dataview_components.dashboard_component import DashBoardComponent 
+app = DashBoardComponent()
+app.render()

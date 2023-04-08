@@ -4,7 +4,7 @@ conn = pymysql.connect(
     port = 3306, 
     db = "py_charmer_hackfest", 
     user = "root", 
-    passwd = "root@123456"
+    passwd = "msahani852"
 )
 
 cursor = conn.cursor()
@@ -52,7 +52,7 @@ def UserRegistration(username: str, first_name: str, last_name: str, email: str,
         print("Data is stored!")
         return "Data stored successfully"
 
-def UserLogin(email: str, pwd: str):
+def UserLogin(email: str, pwd: str, placeholder : str):
     '''
     This function will return True if the given credentials are valid
     otherwise it will return False
@@ -83,5 +83,3 @@ def DeleteUrl(username: str, url: str):
     This function will delete the url from teh database
     '''
     pass
-
-UserRegistration("surDeb10", "Debmalya", "Sur" , "deb@gmail.com", "15deb52.90", "9125367821", "150")

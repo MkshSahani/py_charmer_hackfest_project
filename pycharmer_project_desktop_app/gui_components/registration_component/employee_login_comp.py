@@ -1,6 +1,6 @@
 from tkinter import * 
 import customtkinter 
-from config.constants import STUDENT_LOGIN_TITLE
+from config.constants import EMPLOYEE_LOGIN_TITLE
 from .employee_reg_comp import EmployeeRegComponent
 from .alert_comp import alert
 
@@ -10,7 +10,7 @@ class EmployeeLoginComponent:
         self.studentLoginWindow = customtkinter.CTk()
         self.studentLoginWindow.geometry("800x700")
         self.studentLoginWindow.resizable(False, False)
-        self.studentLoginWindow.title(STUDENT_LOGIN_TITLE)
+        self.studentLoginWindow.title(EMPLOYEE_LOGIN_TITLE)
         self.studentLabel = customtkinter.CTkLabel(master = self.studentLoginWindow, text = "Employee Login", font = customtkinter.CTkFont(size = 30, weight='bold'))
         self.studentLabel.place(relx = 0.35, rely = 0.25)
         self.studentEmailAddressLabel = customtkinter.CTkLabel(master = self.studentLoginWindow, text = "Email Address", font = customtkinter.CTkFont(size = 15, weight='bold'))
@@ -22,7 +22,7 @@ class EmployeeLoginComponent:
         self.studentPassword = customtkinter.CTkEntry(master=self.studentLoginWindow, height=40, width=300, font = customtkinter.CTkFont(size = 12))
         self.studentPassword.configure(show = "*")
         self.studentPassword.place(relx = 0.3, rely = 0.52)
-        self.logiBtn = customtkinter.CTkButton(master = self.studentLoginWindow, text = "Login")
+        self.logiBtn = customtkinter.CTkButton(master = self.studentLoginWindow, text = "Login", command=self.loginBtnCommand)
         self.logiBtn.place(relx = 0.4, rely = 0.6)
         self.studentSignupLabel = customtkinter.CTkLabel(master=self.studentLoginWindow, text = "create a new account.", font = customtkinter.CTkFont(size = 14))
         self.studentSignupLabel.place(relx = 0.38, rely = 0.65)
@@ -44,7 +44,6 @@ class EmployeeLoginComponent:
             alert(error_msg=error_msg)
         else: 
             pass 
-
 
     def signUpBtnCommand(self): 
         self.studentLoginWindow.destroy()

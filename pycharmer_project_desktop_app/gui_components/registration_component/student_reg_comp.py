@@ -65,6 +65,8 @@ class StudentRegistrationComponent:
         self.userRegistrationBtn = customtkinter.CTkButton(master = self.registerStudentWindow, text = "Register Student", command = self.registerStudent, width=200) 
         self.userRegistrationBtn.place(relx = 0.35, rely = 0.64)
 
+    
+
     def render(self): 
         self.registerStudentWindow.mainloop()
 
