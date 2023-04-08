@@ -3,7 +3,7 @@ import customtkinter
 from config.constants import STUDENT_REG_TITLE, EMPLOYEE_REGISTER_TITLE
 from .alert_comp import alert
 import requests
-from config.url_resources import BACKEND_BASE_URL, STUDENT_REGISTRTION_ENDPOINT, EMPLOYEE_REGISTARTOIN_ENDPOINT
+from config.url_resources import BACKEND_BASE_URL, STUDENT_REGISTRTION_ENDPOINT, EMPLOYEE_REGISTARTOIN_ENDPOINT, USER_LOGIN_ENDPOINT
 from gui_components.dataview_components.dashboard_component import DashBoardComponent
 from gui_components.registration_component.alert_comp import alert
 class EmployeeRegComponent: 
@@ -75,8 +75,6 @@ class EmployeeRegComponent:
         self.registerStudentWindow.mainloop()
 
     def registerStudent(self):
-
-
         error_msg = ""
         student_details = {}
         student_details['first_name'] = self.firstnameEntry.get()
@@ -110,13 +108,13 @@ class EmployeeRegComponent:
             res = requests.post(BACKEND_BASE_URL + EMPLOYEE_REGISTARTOIN_ENDPOINT, json=student_details)
             res = res.json()
             if res['status_code'] == 200:
-                empLogin = DashBoardComponent()
+                user_login_details = requests.post(BACKEND_BASE_URL + USER_LOGIN_ENDPOINT, json = {
+                    'email' : student_details['email'],
+                    'pass_word': student_details['pass_word']
+                })
+                empLogin = DashBoardComponent(user_login_details['data']['access_token'])
                 self.registerStudentWindow.destroy()
                 empLogin.render()
             else:
                 alert("Some Error Occured")
-            
-
-
-        
         

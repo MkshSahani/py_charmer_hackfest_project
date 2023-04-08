@@ -1,7 +1,10 @@
 from tkinter import * 
 import customtkinter 
 from config.constants import DASHBOARD_TITLE
-
+from config.url_resources import STRESS_BLINK_DETECTOR
+# import subprocess
+from pynput.keyboard import Controller
+import os
 class DashBoardComponent: 
 
     def __init__(self, access_token : str = ""):
@@ -35,9 +38,6 @@ class DashBoardComponent:
                     text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), height=40, border_spacing=10,width=200,  corner_radius=0, command=self.select_browsing_title)
         self.browsing_classification.grid(row = 4, column = 0, sticky = 'ew', pady = 10)
 
-        self.typing_screen_time_tile = customtkinter.CTkButton(self.navigationFrame, text = "Screen and Typing Time", fg_color='transparent', font = customtkinter.CTkFont(size = 15),
-                    text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), border_spacing=10, width=200, corner_radius=0, command=self.select_screen_time)
-        self.typing_screen_time_tile.grid(row = 5, column = 0, sticky = 'ew', pady = 10)
 
         ### alert frame 
         self.alert_frame = customtkinter.CTkFrame(master = self.dashboardWindow)
@@ -56,9 +56,6 @@ class DashBoardComponent:
         self.browsing_frame_label = customtkinter.CTkLabel(master = self.browsing_frame, text = "Browing Pattern Tab", font = customtkinter.CTkFont(size = 30))
         self.browsing_frame_label.place(relx = 0.05, rely = 0.1)
 
-        self.typing_screen_time_frame = customtkinter.CTkFrame(master = self.dashboardWindow)
-        self.typing_screen_time_labels = customtkinter.CTkLabel(master = self.typing_screen_time_frame, text = "Screen Time and Labels", font = customtkinter.CTkFont(size = 30))
-        self.typing_screen_time_labels.place(relx = 0.05, rely = 0.1)
         self.select_by_name("alert")
 
     def render(self): 
@@ -72,6 +69,9 @@ class DashBoardComponent:
             self.activate_btn.configure(fg_color = 'green')
         else: 
             self.activateFlag = True 
+            # subprocess.call([STRESS_BLINK_DETECTOR])
+            process_return = os.system("python3 " + STRESS_BLINK_DETECTOR)
+            print(process_return)
             self.activate_btn.configure(text = "DeActivate")
             self.activate_btn.configure(fg_color = 'red')
 
