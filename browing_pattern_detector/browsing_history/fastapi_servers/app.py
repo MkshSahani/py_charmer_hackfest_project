@@ -2,6 +2,7 @@ import re
 from fastapi import FastAPI, Request, Response, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from models import URLDetails
+from MLModel import model
 app = FastAPI() 
 
 origins = [
@@ -28,9 +29,8 @@ async def send_url(data : URLDetails):
         print("-------------------------------------------------------------------")
         print("\n")
         # running ML code for categorize the website
-        
-        
-        category=""
+        category=prediction(domain)
+        print(category)
         # storing the category in the mongoDB server
 
         return {
