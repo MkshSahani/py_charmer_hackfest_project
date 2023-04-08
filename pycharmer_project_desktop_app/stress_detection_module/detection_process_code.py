@@ -11,6 +11,14 @@ import matplotlib.pyplot as plt
 # from keras.preprocessing.image import img_to_array
 from keras_preprocessing.image import img_to_array
 from keras.models import load_model
+import requests
+import argparse 
+# from config.url_resources import STRESS_BLINK_ENDPOINT, BACKEND_BASE_URL
+
+ap = argparse.ArgumentParser()
+ap.add_argument("-at", "--access-token")
+args = vars(ap.parse_args())
+
 
 def eye_brow_distance(leye,reye):
     global points
@@ -39,8 +47,6 @@ def emotion_finder(faces,frame):
         label = 'not stressed'
     return label
 
-
-    
 def normalize_values(points,disp):
     normalized_value = abs(disp - np.min(points))/abs(np.max(points) - np.min(points))
     stress_value = np.exp(-(normalized_value))
@@ -53,20 +59,12 @@ def normalize_values(points,disp):
 
 #get the location of the eyes
 def eye_aspect_ratio(eye):
-    # compute the euclidean distances between the vertical landamrks
     A = dist.euclidean(eye[1], eye[5])
     B = dist.euclidean(eye[2], eye[4])
-
-    # compute the euclidean distance between the horizontal
     C = dist.euclidean(eye[0], eye[3])
-
-    # compute the eye aspect ratio
     eye_opening_ratio = (A + B) / (2.0 * C) 
-
-    # return the eye aspect ratio
     return eye_opening_ratio
 
-# the consecuting frame factor tells us to consider this amount of farme.
 ar_thresh = 0.3
 eye_ar_consec_frame = 5
 counter = 0
@@ -77,6 +75,10 @@ predictor = dlib.shape_predictor("/home/mukesh/hackfest/py_charmer_hackfest_proj
 emotion_classifier = load_model("/home/mukesh/hackfest/py_charmer_hackfest_project/pycharmer_project_desktop_app/stress_detection_module/_mini_XCEPTION.102-0.66.hdf5", compile=False)
 cap = cv2.VideoCapture(0)
 points = []
+t1 = time.time()
+t2 = time.time()
+runner_index = 0 
+last_total_blink_count = 0 
 while(True):
     try:
         _,frame = cap.read()
@@ -137,8 +139,21 @@ while(True):
             cv2.putText(clahe_image, "EAR: {:.2f}".format(avg_Ear), (300, 30),cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
         cv2.imshow("Blink count", clahe_image)
         cv2.imshow("Frame", frame)
-
         key = cv2.waitKey(1) & 0xFF
+        t2 = time.time()
+        if t2 - t1 >= 10:
+            t1 = t2 
+            stress_values = points[runner_index:]
+            runner_index = len(points) - 1 
+            blink_count = total - last_total_blink_count
+            last_total_blink_count = total
+            req_body = {
+                'access_token': args['access_token'],
+                'stress_list_lst': stress_values,
+                'blink_count': blink_count,
+                'timestamp': str(t2)
+            }
+            res = requests.post("http://127.0.0.1:8080/stress_blink_value/add_stress_blink_values", json = req_body)
         if key == ord('q'):
             break
     except Exception as e:

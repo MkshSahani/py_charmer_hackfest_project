@@ -75,8 +75,6 @@ class StudentRegistrationComponent:
         self.registerStudentWindow.mainloop()
 
     def registerStudent(self):
-
-
         error_msg = ""
         student_details = {}
         student_details['first_name'] = self.firstnameEntry.get()

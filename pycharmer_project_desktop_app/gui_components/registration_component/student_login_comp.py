@@ -16,7 +16,7 @@ class StudentLoginComponent:
         self.studentLoginWindow.geometry("800x700")
         self.studentLoginWindow.resizable(False, False)
         self.studentLoginWindow.title(STUDENT_LOGIN_TITLE)
-        self.studentLabel = customtkinter.CTkLabel(master = self.studentLoginWindow, text = "Student Login", font = customtkinter.CTkFont(size = 30, weight='bold'))
+        self.studentLabel = customtkinter.CTkLabel(master = self.studentLoginWindow, text = "User Login", font = customtkinter.CTkFont(size = 30, weight='bold'))
         self.studentLabel.place(relx = 0.35, rely = 0.25)
         self.studentEmailAddressLabel = customtkinter.CTkLabel(master = self.studentLoginWindow, text = "Email Address", font = customtkinter.CTkFont(size = 15, weight='bold'))
         self.studentEmailAddressLabel.place(relx = 0.3, rely = 0.35)
@@ -59,7 +59,6 @@ class StudentLoginComponent:
             if res['status_code'] != 200:
                 alert(res['message']) 
             else: 
-                studetnDasthBoard = DashBoardComponent()
                 access_token_details = {
                     'access_token': res['data']['access_token']
                 }
@@ -67,6 +66,7 @@ class StudentLoginComponent:
                 with open(FILE_PATH + "accesstoken.json", 'w') as f:
                     f.write(json_obj)
                 self.studentLoginWindow.destroy()
+                studetnDasthBoard = DashBoardComponent(res['data']['access_token'])
                 studetnDasthBoard.render()
 
 

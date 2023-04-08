@@ -1,8 +1,8 @@
 import re
-from fastapi import FastAPI, Request, Response, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from models import URLDetails
-from MLModel import model
+from MLModel.model import *
 app = FastAPI() 
 
 origins = [
@@ -35,7 +35,7 @@ async def send_url(data : URLDetails):
 
         return {
         'status': "Success"
-    }
+        }
 
 @app.post("/quit_url")
 async def quit_url(data : URLDetails): 

@@ -6,3 +6,7 @@ class StressBlinkValue(BaseModel):
     timestamp : str
     blink_count : int
     access_token : str
+
+
+class GetStressBlinkData(BaseModel):
+    access_token: str 

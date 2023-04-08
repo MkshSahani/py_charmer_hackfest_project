@@ -1,6 +1,6 @@
 from tkinter import * 
 import customtkinter 
-from config.constants import STUDENT_REG_TITLE, EMPLOYEE_REGISTER_TITLE
+from config.constants import EMPLOYEE_REGISTER_TITLE
 from .alert_comp import alert
 import requests
 from config.url_resources import BACKEND_BASE_URL, STUDENT_REGISTRTION_ENDPOINT, EMPLOYEE_REGISTARTOIN_ENDPOINT, USER_LOGIN_ENDPOINT

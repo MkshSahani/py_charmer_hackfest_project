@@ -2,11 +2,6 @@ from fastapi import APIRouter
 from .validator import *
 from db.database import *
 
-'''
-/url/new
-/url/delete
-'''
-
 new_extension_router = APIRouter(
     prefix="/url",
     tags=["url"]
