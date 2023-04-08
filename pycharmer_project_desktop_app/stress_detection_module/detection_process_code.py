@@ -6,7 +6,7 @@ import imutils
 import time
 import dlib
 import cv2
-import matplotlib.pyplot as plt
+import datetime
 
 # from keras.preprocessing.image import img_to_array
 from keras_preprocessing.image import img_to_array
@@ -144,16 +144,16 @@ while(True):
         stress_lst.append(int(stress_value * 100))
         t2 = time.time()
         if t2 - t1 >= 10:
-            t1 = t2 
+            t1 = t2
             stress_values = stress_lst[runner_index:]
-            runner_index = len(stress_lst) - 1 
+            runner_index = len(stress_lst) - 1
             blink_count = total - last_total_blink_count
             last_total_blink_count = total
             req_body = {
                 'access_token': args['access_token'],
                 'stress_list_lst': stress_values,
                 'blink_count': blink_count,
-                'timestamp': str(t2)
+                'timestamp': datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
             }
             res = requests.post("http://127.0.0.1:8080/stress_blink_value/add_stress_blink_values", json = req_body)
         if key == ord('q'):

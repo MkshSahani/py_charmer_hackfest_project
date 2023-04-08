@@ -7,3 +7,4 @@ EMPLOYEE_REGISTARTOIN_ENDPOINT = "/register/employee_register"
 
 STRESS_BLINK_DETECTOR = "/home/mukesh/hackfest/py_charmer_hackfest_project/pycharmer_project_desktop_app/stress_detection_module/detection_process_code.py"
 SRESS_BLINK_DATA_GET = "/stress_blink_value/get_stress_blink_values"
+GET_STEP_COUNT_END_POINT = "https://fastapi.surdebmalya11.repl.co/get_stepcounts"

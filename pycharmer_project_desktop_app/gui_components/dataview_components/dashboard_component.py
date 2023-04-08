@@ -1,19 +1,17 @@
 from tkinter import * 
 import customtkinter 
 from config.constants import DASHBOARD_TITLE
-from config.url_resources import BACKEND_BASE_URL, STRESS_BLINK_DETECTOR, SRESS_BLINK_DATA_GET
+from config.url_resources import BACKEND_BASE_URL, STRESS_BLINK_DETECTOR, SRESS_BLINK_DATA_GET, GET_STEP_COUNT_END_POINT
 import os
 import threading
 import numpy as np
 import requests 
-
+import datetime
 ## graph plotting things. 
-from matplotlib.backends.backend_tkagg import (
-    FigureCanvasTkAgg, NavigationToolbar2Tk)
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
 class DashBoardComponent: 
-
     def __init__(self, access_token : str = ""):
         print("#" * 10 + " " + access_token + " " + "#"* 10)
         print("#" * 20)
@@ -53,20 +51,6 @@ class DashBoardComponent:
         self.alert_label.place(relx = 0.05, rely = 0.1)
         self.stress_frame = customtkinter.CTkFrame(master = self.dashboardWindow)
         self.stress_frame_label = customtkinter.CTkLabel(master = self.stress_frame, text = 'Blink and Stress Level Tab', font = customtkinter.CTkFont(size = 30))
-        
-        fig = Figure(figsize=(5, 4), dpi=100)
-        ax = fig.add_subplot()
-        # line, = ax.hist()
-        res = requests.post(BACKEND_BASE_URL + SRESS_BLINK_DATA_GET, json = {
-            "access_token": self.access_token
-        })
-        data = res.json()
-        print(data)
-        ax.set_xlabel("timestamp")
-        ax.set_ylabel("stress level")
-        canvas = FigureCanvasTkAgg(fig, master=self.stress_frame)
-        canvas.draw()
-        canvas.get_tk_widget().place(x = 70, y = 150, width=700)
         self.stress_frame_label.place(relx = 0.05, rely = 0.1)
         self.step_count_frame = customtkinter.CTkFrame(master = self.dashboardWindow)
         self.step_count_frame_label = customtkinter.CTkLabel(master = self.step_count_frame, text = "Step Count Tab", font = customtkinter.CTkFont(size = 30))
@@ -85,7 +69,7 @@ class DashBoardComponent:
             self.activate_btn.configure(text = "Activate")
             self.activate_btn.configure(fg_color = 'green')
         else:
-            self.activateFlag = True 
+            self.activateFlag = True
             thread = threading.Thread(target=os.system("python3 " + STRESS_BLINK_DETECTOR + " --access-token " + f"{self.access_token}"))
             thread.start()
             self.activate_btn.configure(text = "DeActivate")
@@ -102,20 +86,53 @@ class DashBoardComponent:
         else: 
             self.alert_frame.grid_forget()
         if name == "stress":
+            fig = Figure(figsize=(5, 4), dpi=100)
+            ax = fig.add_subplot()
+            # line, = ax.hist()
+            res = requests.post(BACKEND_BASE_URL + SRESS_BLINK_DATA_GET, json = {
+                "access_token": self.access_token
+            })
+            data = res.json()
+            print(data)
+            time_stamp_lst = data['data']['time_stamp_lst']
+            blink_count_lst = data['data']['blink_count_lst']
+            stress_level_lst = data['data']['stress_level_lst']
+            time_lst_1 = []
+            time_lst_2 = []
+            stress_lst_1 = []
+            stress_lst_2 = []
+            for i in range(len(stress_level_lst)): 
+                if stress_level_lst[i] >= 85:
+                    stress_lst_2.append(stress_level_lst[i])
+                    time_lst_2.append(datetime.datetime.strptime(time_stamp_lst[i], "%m/%d/%Y, %H:%M:%S")) 
+                else: 
+                    stress_lst_1.append(stress_level_lst[i])
+                    time_lst_1.append(datetime.datetime.strptime(time_stamp_lst[i], "%m/%d/%Y, %H:%M:%S")) 
+            print(len(time_lst_1), ", ", len(stress_lst_1))
+            ax.scatter(time_lst_1, stress_lst_1,color = 'g')
+            ax.scatter(time_lst_2, stress_lst_2,color = 'r')
+            ax.set_xlabel("timestamp")
+            ax.set_ylabel("stress level")
+            ax.set_title("Time vs Stress Level")
+            canvas = FigureCanvasTkAgg(fig, master=self.stress_frame)
+            canvas.draw()
+            canvas.get_tk_widget().place(x = 60, y = 110, width=800, height=300)
             self.stress_frame.grid(row = 0, column = 1, sticky = 'nsew')
         else:
             self.stress_frame.grid_forget()
-        
         if name == "step_count":
+            res = requests.post(GET_STEP_COUNT_END_POINT, json = {
+                'accessToken': self.access_token
+            })
+            data = res.json() 
+            print(data)
             self.step_count_frame.grid(row = 0, column = 1, sticky = 'nsew')
         else:
             self.step_count_frame.grid_forget()
-        
         if name == "browsing":
             self.browsing_frame.grid(row = 0, column = 1, sticky = 'nsew')
         else:
             self.browsing_frame.grid_forget()
-
     
     def select_alert_tile(self):
         self.select_by_name("alert")

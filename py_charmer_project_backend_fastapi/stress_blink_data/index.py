@@ -17,7 +17,6 @@ async def add_stress_blink_values(stressBlinkValue : StressBlinkValue):
         "data": {}
     }
 
-
 @stress_blink_router.post("/get_stress_blink_values") 
 async def get_stress_blink_data(getStressBlinkValues : GetStressBlinkData):
     get_stress_blink_data = getStressBlinkValues.dict() 

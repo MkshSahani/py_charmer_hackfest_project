@@ -6,7 +6,7 @@ from MLModel.model import *
 app = FastAPI() 
 
 origins = [
-    "*",
+    "*"
 ]
 
 app.add_middleware(
@@ -20,19 +20,10 @@ app.add_middleware(
 @app.post("/send_url")
 async def send_url(data : URLDetails):
     data = data.dict()
-    print(data)
-    print("-------------------------")
-    print(data)
     if data['url'] != '' and data['url'].startswith('chrome://') == False : 
         domain = re.search(r"([^/]*/){2}([^/]*)", data['url']).group(0)
-        print(domain)
-        print("-------------------------------------------------------------------")
-        print("\n")
-        # running ML code for categorize the website
         category=prediction(domain)
-        print(category)
-        # storing the category in the mongoDB server
-
+        
         return {
         'status': "Success"
         }
@@ -41,14 +32,6 @@ async def send_url(data : URLDetails):
 async def quit_url(data : URLDetails): 
     print(data)
     data = data.dict()
-    print("--------------------------------------")
-    print(data)
     return {
         'status': "Success"
-    }
-
-@app.get("/test") 
-async def test(): 
-    return {
-        'message' : 'Sucesss'
     }
