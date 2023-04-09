@@ -7,18 +7,16 @@ import threading
 import numpy as np
 import requests 
 import datetime
-## graph plotting things. 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
 class DashBoardComponent: 
     def __init__(self, access_token : str = ""):
-        print("#" * 10 + " " + access_token + " " + "#"* 10)
-        print("#" * 20)
         self.access_token = access_token 
         self.activateFlag = False
         self.dashboardWindow = customtkinter.CTk()
         self.dashboardWindow.geometry("1200x700")
+        self.dashboardWindow.resizable(False, False)
         self.dashboardWindow.title(DASHBOARD_TITLE)
         self.dashboardWindow.grid_rowconfigure(0, weight=1)
         self.dashboardWindow.grid_columnconfigure(1, weight=1)
@@ -44,8 +42,6 @@ class DashBoardComponent:
         self.browsing_classification = customtkinter.CTkButton(self.navigationFrame, text = "Browsing Pattern", fg_color='transparent', font = customtkinter.CTkFont(size = 15),
                     text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), height=40, border_spacing=10,width=200,  corner_radius=0, command=self.select_browsing_title)
         self.browsing_classification.grid(row = 4, column = 0, sticky = 'ew', pady = 10)
-
-        ### alert frame 
         self.alert_frame = customtkinter.CTkFrame(master = self.dashboardWindow)
         self.alert_label = customtkinter.CTkLabel(master = self.alert_frame, text = 'Alert Tab', font = customtkinter.CTkFont(size = 30))
         self.alert_label.place(relx = 0.05, rely = 0.1)
@@ -65,9 +61,9 @@ class DashBoardComponent:
     def render(self): 
         self.dashboardWindow.mainloop()
 
-    def activate(self): 
+    def activate(self):
         if self.activateFlag:
-            self.activateFlag = False 
+            self.activateFlag = False
             self.activate_btn.configure(text = "Activate")
             self.activate_btn.configure(fg_color = 'green')
         else:
@@ -90,7 +86,6 @@ class DashBoardComponent:
         if name == "stress":
             fig = Figure(figsize=(5, 4), dpi=100)
             ax = fig.add_subplot()
-            # line, = ax.hist()
             res = requests.post(BACKEND_BASE_URL + SRESS_BLINK_DATA_GET, json = {
                 "access_token": self.access_token
             })
@@ -142,8 +137,34 @@ class DashBoardComponent:
                 'access_token' : self.access_token
             })
             data = res.json()
-            print(data)
-
+            fig1 = Figure(figsize=(5, 4), dpi = 100)
+            ax1 = fig1.add_subplot()
+            # ax1.plot([datetime.datetime.strptime(fl, "%m/%d/%Y, %H:%M:%S") for fl in time_stamp_lst], blink_count_lst, marker = 'o',  markerfacecolor = 'red')
+            dict_obj = {}
+            for obj in data['data']:
+                for i, j in obj['type'].items():
+                    if i not in dict_obj:
+                        dict_obj[i] = {
+                            'date': [obj['date']],
+                            'count': [j]
+                        } 
+                    else: 
+                        dict_obj[i]['date'].append(obj['date'])
+                        dict_obj[i]['count'].append(j)
+            # print(dict_obj)
+            colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k']
+            color_index = 0 
+            for t in list(dict_obj.keys()): 
+                ax1.scatter(dict_obj[t]['date'], dict_obj[t]['count'], s = 200, c= colors[color_index])
+                color_index += 1 
+                color_index %= len(colors)
+            ax1.set_xlabel("Date")
+            ax1.set_ylabel("Number of Visit")
+            ax1.set_title("Number of Vists vs Date")
+            ax1.legend([t for t in list(dict_obj.keys())])
+            canvas1 = FigureCanvasTkAgg(fig1, master = self.browsing_frame)
+            canvas1.draw()
+            canvas1.get_tk_widget().place(x = 60, y = 200, width=800, height=300)
             self.browsing_frame.grid(row = 0, column = 1, sticky = 'nsew')
         else:
             self.browsing_frame.grid_forget()

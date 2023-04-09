@@ -137,7 +137,7 @@ while(True):
         key = cv2.waitKey(1) & 0xFF
         stress_lst.append(int(stress_value * 100))
         t2 = time.time()
-        if t2 - t1 >= 40:
+        if t2 - t1 >= 60:
             t1 = t2
             stress_values = stress_lst[runner_index:]
             runner_index = len(stress_lst) - 1
