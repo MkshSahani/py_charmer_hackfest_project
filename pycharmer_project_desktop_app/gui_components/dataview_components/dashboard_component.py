@@ -128,7 +128,18 @@ class DashBoardComponent:
                 'accessToken': self.access_token
             })
             data = res.json()
-            print(data)
+            date_string = []
+            step_count_lst = []
+            for i, j in data['data'].items():
+                date_string.insert(i) 
+                step_count_lst.append(j)
+            
+            fig = Figure(figsize = (5, 4), dpi = 100)
+            ax = fig.add_subplot()
+            ax.hist(date_string, step_count_lst)
+            canvas = FigureCanvasTkAgg(fig, master = self.step_count_frame)
+            canvas.draw()
+            canvas.get_tk_widget().place(x = 60, y = 90, width = 800, height=250)
             self.step_count_frame.grid(row = 0, column = 1, sticky = 'nsew')
         else:
             self.step_count_frame.grid_forget()
