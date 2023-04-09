@@ -1,7 +1,7 @@
 from tkinter import * 
 import customtkinter 
 from config.constants import DASHBOARD_TITLE
-from config.url_resources import BACKEND_BASE_URL, STRESS_BLINK_DETECTOR, SRESS_BLINK_DATA_GET, GET_STEP_COUNT_END_POINT, GET_BOWSING_DETAILS
+from config.url_resources import BACKEND_BASE_URL, STRESS_BLINK_DETECTOR, SRESS_BLINK_DATA_GET, GET_STEP_COUNT_END_POINT, GET_BOWSING_DETAILS, GET_ALERT_END_POINT
 import os
 import threading
 import numpy as np
@@ -58,6 +58,8 @@ class DashBoardComponent:
         self.browsing_frame_label.place(relx = 0.05, rely = 0.1)
         self.select_by_name("alert")
 
+
+
     def render(self): 
         self.dashboardWindow.mainloop()
 
@@ -80,6 +82,18 @@ class DashBoardComponent:
         self.step_count.configure(fg_color = ("gray75", "gray25") if name == "step_count" else "transparent")
         self.browsing_classification.configure(fg_color = ("gray75", "gray25") if name == "browsing" else "transparent")
         if name == "alert":
+            res = requests.post(BACKEND_BASE_URL + GET_ALERT_END_POINT, json = {
+                'access_token': self.access_token
+            }) 
+            data = res.json()['data']
+            print(data)
+            frame = customtkinter.CTkFrame(master = self.alert_frame, width=900)
+            i = 0 
+            for alert in data['alert']:
+                label = customtkinter.CTkLabel(master = frame, text = alert, font = customtkinter.CTkFont(size = 15), width=500, bg_color=("gray80", "gray20"))
+                label.grid(row = i, column = 0)
+                i += 1 
+            frame.place(relx = 0.1, rely = 0.2)
             self.alert_frame.grid(row = 0, column = 1, sticky = 'nsew')
         else: 
             self.alert_frame.grid_forget()
@@ -137,12 +151,15 @@ class DashBoardComponent:
             
             fig = Figure(figsize = (5, 4), dpi = 100)
             ax = fig.add_subplot()
-            print(date_string)
             print(step_count_lst)
-            ax.hist(date_string, bins = step_count_lst)
+            ax.hist(step_count_lst, len(step_count_lst), density = True)
+            ax.set_xlabel("Date")
+            ax.set_ylabel("Number of Steps")
+            ax.set_title("Number of Step Moved by the User")
+            ax.set_xticks([datetime.datetime.strptime(d, "%m/%d/%Y") for d in date_string])
             canvas = FigureCanvasTkAgg(fig, master = self.step_count_frame)
             canvas.draw()
-            canvas.get_tk_widget().place(x = 60, y = 90, width = 800, height=250)
+            canvas.get_tk_widget().place(x = 60, y = 130, width = 800, height=250)
             self.step_count_frame.grid(row = 0, column = 1, sticky = 'nsew')
         else:
             self.step_count_frame.grid_forget()

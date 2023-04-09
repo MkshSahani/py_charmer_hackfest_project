@@ -19,7 +19,10 @@ async def add_stress_blink_values(stressBlinkValue : StressBlinkValue):
 
 @stress_blink_router.post("/get_stress_blink_values") 
 async def get_stress_blink_data(getStressBlinkValues : GetStressBlinkData):
-    get_stress_blink_data = getStressBlinkValues.dict() 
+    if type(getStressBlinkValues) != dict:
+        get_stress_blink_data = getStressBlinkValues.dict() 
+    else: 
+        get_stress_blink_data = getStressBlinkValues
     data = pycharmer_mongo_db.stress_blink_data.find({"access_token": get_stress_blink_data['access_token']}) 
     time_stamp_lst = []
     blink_count = []

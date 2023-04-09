@@ -9,3 +9,4 @@ STRESS_BLINK_DETECTOR = "/home/mukesh/hackfest/py_charmer_hackfest_project/pycha
 SRESS_BLINK_DATA_GET = "/stress_blink_value/get_stress_blink_values"
 GET_STEP_COUNT_END_POINT = "https://fastapi.surdebmalya11.repl.co/get_stepcounts"
 GET_BOWSING_DETAILS = "/browsing_history/get_user_browsing_details"
+GET_ALERT_END_POINT = "/alert/get_alert"

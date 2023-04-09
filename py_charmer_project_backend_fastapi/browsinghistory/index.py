@@ -42,7 +42,8 @@ async def add_user_browing_hist(browsing_details : BrowingDetails):
     
 @browser_api_router.post("/get_user_browsing_details")
 async def get_user_browsing_details(user_browsing_details : UserBrowsingDetails): 
-    user_browsing_details = user_browsing_details.dict()
+    if type(user_browsing_details) != dict:
+        user_browsing_details = user_browsing_details.dict()
     access_token = user_browsing_details['access_token']
     browsing_data = []
     res = pycharmer_mongo_db.browser_pattern.find({"access_token": access_token})

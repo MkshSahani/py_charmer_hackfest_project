@@ -13,7 +13,7 @@ class StudentRegistrationComponent:
         self.registerStudentWindow.geometry("800x700")
         self.registerStudentWindow.resizable(False, False)
         self.registerStudentWindow.title(STUDENT_REG_TITLE)
-        self.registerStudentLabel = customtkinter.CTkLabel(master = self.registerStudentWindow, text = "Student Registration", font = customtkinter.CTkFont(size = 30))
+        self.registerStudentLabel = customtkinter.CTkLabel(master = self.registerStudentWindow, text = "User Registration", font = customtkinter.CTkFont(size = 30))
         self.registerStudentLabel.place(relx = 0.32, rely = 0.1)
 
         ## First Name 
@@ -65,7 +65,7 @@ class StudentRegistrationComponent:
         self.intervalTimeSetLabel.place(relx = 0.6, rely = 0.5)
         self.intervalTimeSetEntry = customtkinter.CTkEntry(master = self.registerStudentWindow, font= customtkinter.CTkFont(size = 17))
         self.intervalTimeSetEntry.place(relx = 0.6, rely = 0.55)
-        self.timeLabel = customtkinter.CTkLabel(master = self.registerStudentWindow, text = 'Hours', font = customtkinter.CTkFont(size = 15))
+        self.timeLabel = customtkinter.CTkLabel(master = self.registerStudentWindow, text = 'Minutes', font = customtkinter.CTkFont(size = 15))
         self.timeLabel.place(relx = 0.79, rely = 0.55)
         self.userRegistrationBtn = customtkinter.CTkButton(master = self.registerStudentWindow, text = "Register Student", command = self.registerStudent, width=200) 
         self.userRegistrationBtn.place(relx = 0.35, rely = 0.64)
