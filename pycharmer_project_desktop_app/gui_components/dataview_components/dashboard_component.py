@@ -128,15 +128,18 @@ class DashBoardComponent:
                 'accessToken': self.access_token
             })
             data = res.json()
+            print(data)
             date_string = []
             step_count_lst = []
             for i, j in data['data'].items():
-                date_string.insert(i) 
+                date_string.append(i) 
                 step_count_lst.append(j)
             
             fig = Figure(figsize = (5, 4), dpi = 100)
             ax = fig.add_subplot()
-            ax.hist(date_string, step_count_lst)
+            print(date_string)
+            print(step_count_lst)
+            ax.hist(date_string, bins = step_count_lst)
             canvas = FigureCanvasTkAgg(fig, master = self.step_count_frame)
             canvas.draw()
             canvas.get_tk_widget().place(x = 60, y = 90, width = 800, height=250)
@@ -147,6 +150,7 @@ class DashBoardComponent:
             res = requests.post(BACKEND_BASE_URL + GET_BOWSING_DETAILS, json = {
                 'access_token' : self.access_token
             })
+            # print(res.txt)
             data = res.json()
             fig1 = Figure(figsize=(5, 4), dpi = 100)
             ax1 = fig1.add_subplot()
